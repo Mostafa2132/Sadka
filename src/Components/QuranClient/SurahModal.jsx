@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes } from "react-icons/fa";
 import { IoSparkles } from "react-icons/io5";
 import { BsStarFill } from "react-icons/bs";
-import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
+import AudioPlayer from "../AudioPlayer/AudioPlayer";
 
 export default function SurahModal({ surahNumber, onClose }) {
   const [surahData, setSurahData] = useState(null);
