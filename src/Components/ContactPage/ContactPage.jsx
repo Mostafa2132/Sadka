@@ -4,74 +4,45 @@ import { FaWhatsapp, FaInstagram, FaLinkedin } from "react-icons/fa";
 import StarsBackground from "../StarsBackground/StarsBackground";
 
 export default function ContactPage() {
+  const cards = [
+    { href: "https://wa.me/qr/Z3SZKGVB4VD7I1", icon: FaWhatsapp, title: "واتساب", desc: "تواصل سريع ومباشر", color: "text-[#25D366]" },
+    { href: "https://www.instagram.com/mostafa_ebrahem_0?igsh=NG1ubW9rNXZpODdk", icon: FaInstagram, title: "إنستجرام", desc: "تابع أحدث الأعمال", color: "text-[#E4405F]" },
+    { href: "https://www.linkedin.com/in/mostafa-ebrahem-81120a288/", icon: FaLinkedin, title: "LinkedIn", desc: "تواصل مهني", color: "text-[#0A66C2]" },
+  ];
   return (
-    <section className="relative py-28 px-4 bg-gradient-to-br from-indigo-950 via-purple-900 to-indigo-950 overflow-hidden">
-      {/* Background Stars */}
+    <section className="relative py-10 md:py-14 px-4 overflow-hidden min-h-[70vh]">
       <StarsBackground />
-      {/* Glow background */}
-      <div className="absolute inset-0 bg-yellow-400/5 blur-3xl pointer-events-none"></div>
+      <div className="relative max-w-[960px] mx-auto">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
+          <span className="inline-flex px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.07] text-xs text-white/70">تواصل معنا</span>
+          <h2 className="mt-3 text-[30px] md:text-[42px] font-bold tracking-tight text-white">نسعد بتواصلك</h2>
+          <p className="text-white/50 text-sm mt-1 max-w-[560px] mx-auto leading-6">لأي استفسار أو تعاون أو كلمة طيبة — اختر المنصة الأنسب لك، ونرد عليك في أقرب وقت بإذن الله.</p>
+        </motion.div>
 
-      <div className="relative z-10 max-w-5xl mx-auto text-center">
-        {/* Title */}
-        <motion.h2
-          initial={{ opacity: 0, y: -30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl md:text-5xl py-3 font-bold mb-6 bg-gradient-to-r from-yellow-200 via-yellow-300 to-yellow-400 bg-clip-text text-transparent"
-        >
-          تواصل معي
-        </motion.h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          {cards.map((c, i) => (
+            <motion.a
+              key={c.title}
+              href={c.href}
+              target="_blank"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.08 }}
+              className="group relative overflow-hidden rounded-[24px] border border-white/[0.07] bg-white/[0.04] backdrop-blur-xl p-6 text-center hover:bg-white/[0.07] hover:border-white/15 transition flex flex-col items-center"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-center">
+                <c.icon className={`text-2xl ${c.color}`} />
+              </div>
+              <h3 className="text-white font-bold mt-4">{c.title}</h3>
+              <p className="text-white/50 text-sm mt-1">{c.desc}</p>
+              <span className="mt-4 inline-flex text-xs font-medium text-white/60 group-hover:text-white transition">فتح الرابط ←</span>
+            </motion.a>
+          ))}
+        </div>
 
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-purple-200 max-w-2xl mx-auto mb-14 leading-relaxed"
-        >
-          يسعدني تواصلك معي في أي وقت، سواء لاستفسار، تعاون، أو حتى كلمة طيبة 🌙
-          اختر المنصة الأنسب لك.
-        </motion.p>
-
-        {/* Contact Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* WhatsApp */}
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            href="https://wa.me/qr/Z3SZKGVB4VD7I1"
-            target="_blank"
-            className="bg-indigo-950/70 border border-yellow-400/20 rounded-2xl p-8 backdrop-blur-xl shadow-xl shadow-purple-500/30 transition"
-          >
-            <FaWhatsapp className="text-5xl text-green-400 mx-auto mb-4" />
-            <h3 className="text-yellow-300 text-xl font-bold mb-2">واتساب</h3>
-            <p className="text-purple-200 text-sm">
-              تواصل سريع ومباشر في أي وقت
-            </p>
-          </motion.a>
-
-          {/* Instagram */}
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            href="https://www.instagram.com/mostafa_ebrahem_0?igsh=NG1ubW9rNXZpODdk"
-            target="_blank"
-            className="bg-indigo-950/70 border border-yellow-400/20 rounded-2xl p-8 backdrop-blur-xl shadow-xl shadow-purple-500/30 transition"
-          >
-            <FaInstagram className="text-5xl text-pink-400 mx-auto mb-4" />
-            <h3 className="text-yellow-300 text-xl font-bold mb-2">إنستجرام</h3>
-            <p className="text-purple-200 text-sm">تابعني وشوف أحدث الأعمال</p>
-          </motion.a>
-
-          {/* LinkedIn */}
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            href="https://www.linkedin.com/in/mostafa-ebrahem-81120a288/"
-            target="_blank"
-            className="bg-indigo-950/70 border border-yellow-400/20 rounded-2xl p-8 backdrop-blur-xl shadow-xl shadow-purple-500/30 transition"
-          >
-            <FaLinkedin className="text-5xl text-sky-400 mx-auto mb-4" />
-            <h3 className="text-yellow-300 text-xl font-bold mb-2">LinkedIn</h3>
-            <p className="text-purple-200 text-sm">تواصل مهني وفرص تعاون</p>
-          </motion.a>
+        <div className="mt-8 rounded-2xl bg-[#E8C46A]/10 border border-[#E8C46A]/15 p-4 text-center">
+          <p className="text-sm text-[#FDEEB1]">🤲 اللهم اجعل هذا العمل خالصًا لوجهك، وانفع به من قرأه</p>
+          <p className="text-xs text-white/40 mt-1">نرحب برسائلكم واقتراحاتكم دائمًا</p>
         </div>
       </div>
     </section>

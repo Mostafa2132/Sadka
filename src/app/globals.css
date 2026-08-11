@@ -2,80 +2,165 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-body {
-  @apply bg-gradient-to-br from-indigo-950 via-purple-900 to-indigo-950;
+/* ───── 2026 Design System ───── */
+:root {
+  --bg: #040C12;
+  --bg-elevated: #07161E;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-strong: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --gold-soft: #FDEEB1;
+  --gold: #E8C46A;
+  --gold-deep: #C7A14A;
+  --gold-glow: rgba(232, 196, 106, 0.35);
+  --emerald: #10B981;
+  --teal: #14B8A6;
+  --text: #F1F5F9;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
 }
 
-/* ::-webkit-scrollbar {
-  @apply w-2 ;
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #040C12;
+  color: var(--text);
+  font-family: Tajawal, system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Page background mesh – deep emerald night luxury */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(800px 600px at 15% 10%, rgba(16, 185, 129, 0.12), transparent 60%),
+    radial-gradient(900px 700px at 85% 20%, rgba(20, 184, 166, 0.10), transparent 60%),
+    radial-gradient(1000px 800px at 50% 100%, rgba(232, 196, 106, 0.06), transparent 70%),
+    linear-gradient(180deg, #040C12 0%, #05141A 35%, #040E18 100%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.035;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Scrollbar – minimal 2026 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-indigo-900;
+  background: #0A1920;
 }
-
 ::-webkit-scrollbar-thumb {
-  @apply bg-purple-700 rounded;
+  background: linear-gradient(180deg, #1E3A3A, #0F2E2E);
+  border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-purple-500;
-} */
-
-button {
-  @apply transition transform cursor-pointer hover:scale-105;
+  background: linear-gradient(180deg, #2A4A3A, #1A3E3E);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1E3A3A #0A1920;
 }
 
+::selection {
+  background: rgba(232, 196, 106, 0.25);
+  color: #FDEEB1;
+}
 
-  @keyframes twinkle {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.5); }
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 0.6; }
-        }
-        
-        @keyframes loading-bar {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        
-        .animate-twinkle {
-          animation: twinkle infinite;
-        }
-        
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-        
-        .animate-spin-slow {
-          animation: spin-slow 20s linear infinite;
-        }
-        
-        .animate-pulse-slow {
-          animation: pulse-slow 3s ease-in-out infinite;
-        }
-        
-        .animate-loading-bar {
-          animation: loading-bar 1.5s ease-in-out infinite;
-        }
-        
-        .animate-gradient {
-          background-size: 200% auto;
-          animation: gradient 3s ease infinite;
-        }
+button {
+  cursor: pointer;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.glass-strong {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+.text-gold {
+  background: linear-gradient(135deg, #FDEEB1 0%, #E8C46A 45%, #C7A14A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.border-gold {
+  border-color: rgba(232, 196, 106, 0.22);
+}
+.shadow-gold {
+  box-shadow: 0 8px 32px rgba(232, 196, 106, 0.18), 0 2px 8px rgba(0,0,0,0.4);
+}
+.shadow-soft {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.3);
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.15); }
+}
+@keyframes loading-bar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 6s ease-in-out infinite;
+}
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
+.animate-spin-slow {
+  animation: spin-slow 28s linear infinite;
+}
+.animate-twinkle {
+  animation: twinkle 3.5s ease-in-out infinite;
+}
+.animate-loading-bar {
+  animation: loading-bar 1.6s ease-in-out infinite;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(232, 196, 106, 0.6);
+  outline-offset: 2px;
+}
+
+.font-arabic {
+  font-family: Amiri, Tajawal, serif;
+  letter-spacing: 0;
+}

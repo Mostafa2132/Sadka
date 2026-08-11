@@ -2,223 +2,77 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { BsStarFill } from "react-icons/bs";
-import { FaBookOpen } from "react-icons/fa";
 import SurahModal from "./SurahModal";
 import StarsBackground from "../StarsBackground/StarsBackground";
 
 export default function QuranClient({ surahs, error }) {
   const [selectedSurahNumber, setSelectedSurahNumber] = useState(null);
   const [surahPage, setSurahPage] = useState(1);
-  
-  const surahPerPage = 12; // زودت العدد عشان أفضل
-
-  // حساب السور للصفحة الحالية
+  const surahPerPage = 12;
   const indexOfLastSurah = surahPage * surahPerPage;
   const indexOfFirstSurah = indexOfLastSurah - surahPerPage;
   const currentSurahs = surahs.slice(indexOfFirstSurah, indexOfLastSurah);
   const totalSurahPages = Math.ceil(surahs.length / surahPerPage);
-
   const nextSurahPage = () => setSurahPage((prev) => Math.min(prev + 1, totalSurahPages));
   const prevSurahPage = () => setSurahPage((prev) => Math.max(prev - 1, 1));
 
-  // عرض الخطأ
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-indigo-950 flex items-center justify-center px-4">
-        <div className="text-center">
-          <p className="text-red-400 text-xl mb-4">حدث خطأ في تحميل السور</p>
-          <p className="text-purple-300">{error}</p>
+      <div className="min-h-[60vh] flex items-center justify-center px-4 py-16">
+        <div className="text-center rounded-2xl border border-red-500/20 bg-red-500/5 p-8">
+          <p className="text-red-300">حدث خطأ في تحميل السور</p>
+          <p className="text-white/50 text-sm mt-2">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-indigo-950 py-24 px-4 relative overflow-hidden">
-      {/* Background Stars */}
-    <StarsBackground/>
-
-      {/* Blur Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-yellow-500/20 rounded-full blur-3xl animate-pulse-slow pointer-events-none" style={{ animationDelay: '1.5s' }} />
-
-      <div className="relative z-10 max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: -40 }} 
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-14"
-        >
-          <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <FaBookOpen className="mx-auto text-7xl text-yellow-300 mb-6 drop-shadow-2xl" />
-          </motion.div>
-          
-          <h1 className="text-5xl md:text-6xl py-3 font-bold bg-gradient-to-r from-yellow-200 via-yellow-300 to-yellow-400 bg-clip-text text-transparent mb-3">
-            القرآن الكريم
-          </h1>
-          
-          <p className="text-purple-200 text-lg">
-            اختر السورة لتصفح الآيات والاستماع إليها
-          </p>
-
-          <div className="flex items-center justify-center gap-2 mt-4">
-            <BsStarFill className="text-yellow-300 text-xs" />
-            <p className="text-purple-300 text-sm">
-              {surahs.length} سورة • بصوت الشيخ مشاري العفاسي
-            </p>
-            <BsStarFill className="text-yellow-300 text-xs" />
-          </div>
+    <div className="min-h-screen relative overflow-hidden py-10 md:py-14 px-4">
+      <StarsBackground />
+      <div className="relative max-w-[1280px] mx-auto">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.07] text-xs font-medium text-white/70">
+            ۞ القرآن الكريم
+          </span>
+          <h1 className="mt-3 text-[30px] md:text-[44px] font-bold tracking-tight text-white">تصفح السور</h1>
+          <p className="text-white/50 text-sm mt-1">{surahs.length} سورة • تلاوة الشيخ مشاري العفاسي</p>
         </motion.div>
 
-        {/* Surah Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-10"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {currentSurahs.map((surah, index) => (
-              <motion.button
-                key={surah.number}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3 + index * 0.05 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedSurahNumber(surah.number)}
-                className="
-                  relative
-                  bg-gradient-to-br from-indigo-950/80 to-purple-900/80
-                  backdrop-blur-sm
-                  border-2 border-yellow-400/30
-                  rounded-2xl
-                  p-6
-                  hover:border-yellow-400/60
-                  hover:shadow-xl hover:shadow-yellow-400/20
-                  transition-all duration-300
-                  group
-                  overflow-hidden
-                "
-              >
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity">
-                  <div className="w-full h-full" style={{
-                    backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
-                    backgroundSize: '20px 20px'
-                  }} />
-                </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
+          {currentSurahs.map((surah, index) => (
+            <motion.button
+              key={surah.number}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.03 }}
+              onClick={() => setSelectedSurahNumber(surah.number)}
+              className="group relative text-right overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.04] backdrop-blur-xl p-5 hover:bg-white/[0.07] hover:border-white/15 transition text-left"
+            >
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
+              <div className="flex items-start justify-between gap-3">
+                <div className="w-8 h-8 rounded-xl bg-[#0A1E1E] border border-white/10 flex items-center justify-center text-[#E8C46A] text-xs font-bold">{surah.number}</div>
+                <span className="px-2 py-1 rounded-full bg-white/[0.04] border border-white/[0.06] text-[11px] text-white/50">{surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'} • {surah.numberOfAyahs} آيات</span>
+              </div>
+              <div className="mt-3">
+                <div className="text-[18px] font-bold text-white">{surah.name}</div>
+                <div className="text-xs text-white/50 mt-0.5">{surah.englishName} • {surah.englishNameTranslation}</div>
+              </div>
+              <div className="mt-3 inline-flex text-xs text-[#E8C46A] group-hover:gap-1.5 gap-1 transition-all">استماع وتلاوة <span>←</span></div>
+            </motion.button>
+          ))}
+        </div>
 
-                {/* Content */}
-                <div className="relative z-10">
-                  {/* Surah Number */}
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-purple-900 font-bold text-sm shadow-lg">
-                    {surah.number}
-                  </div>
-
-                  {/* Surah Name */}
-                  <h3 className="text-white text-2xl font-bold mb-2 text-center">
-                    {surah.name}
-                  </h3>
-
-                  {/* English Name */}
-                  <p className="text-yellow-300 text-sm mb-2">
-                    {surah.englishName}
-                  </p>
-
-                  {/* Ayahs Count */}
-                  <div className="flex items-center justify-center gap-2 text-purple-200 text-xs">
-                    <BsStarFill className="text-yellow-300/50 text-xs" />
-                    <span>{surah.numberOfAyahs} آية</span>
-                  </div>
-
-                  {/* Revelation Type */}
-                  <div className="mt-2 inline-block px-3 py-1 bg-yellow-400/10 border border-yellow-400/30 rounded-full text-yellow-300 text-xs">
-                    {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}
-                  </div>
-                </div>
-
-                {/* Corner Stars */}
-                <BsStarFill className="absolute top-2 left-2 text-yellow-300/20 text-xs group-hover:text-yellow-300/40 transition-colors" />
-                <BsStarFill className="absolute bottom-2 right-2 text-yellow-300/20 text-xs group-hover:text-yellow-300/40 transition-colors" />
-              </motion.button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Pagination */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-col sm:flex-row justify-center items-center gap-4"
-        >
-          <button
-            onClick={prevSurahPage}
-            disabled={surahPage === 1}
-            className="
-              px-6 py-3
-              bg-gradient-to-r from-purple-800/60 to-indigo-900/60
-              backdrop-blur-sm
-              border-2 border-yellow-400/30
-              rounded-xl
-              text-yellow-300
-              font-semibold
-              hover:border-yellow-400/60
-              hover:shadow-lg hover:shadow-yellow-400/20
-              transition-all
-              disabled:opacity-30
-              disabled:cursor-not-allowed
-              disabled:hover:shadow-none
-            "
-          >
-            ← السابق
-          </button>
-
-          <div className="px-6 py-3 bg-yellow-400/10 border border-yellow-400/30 rounded-xl">
-            <span className="text-purple-200">
-              صفحة <span className="text-yellow-300 font-bold">{surahPage}</span> من <span className="text-yellow-300 font-bold">{totalSurahPages}</span>
-            </span>
-          </div>
-
-          <button
-            onClick={nextSurahPage}
-            disabled={surahPage === totalSurahPages}
-            className="
-              px-6 py-3
-              bg-gradient-to-r from-purple-800/60 to-indigo-900/60
-              backdrop-blur-sm
-              border-2 border-yellow-400/30
-              rounded-xl
-              text-yellow-300
-              font-semibold
-              hover:border-yellow-400/60
-              hover:shadow-lg hover:shadow-yellow-400/20
-              transition-all
-              disabled:opacity-30
-              disabled:cursor-not-allowed
-              disabled:hover:shadow-none
-            "
-          >
-            التالي →
-          </button>
-        </motion.div>
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-3">
+          <button onClick={prevSurahPage} disabled={surahPage === 1} className="px-5 py-2.5 rounded-full bg-white/[0.06] border border-white/10 text-white text-sm font-medium hover:bg-white/[0.10] disabled:opacity-30 disabled:cursor-not-allowed transition">← السابق</button>
+          <div className="px-4 py-2 rounded-full bg-[#E8C46A]/10 border border-[#E8C46A]/15 text-sm text-white/70">صفحة <span className="text-[#FDEEB1] font-bold">{surahPage}</span> من {totalSurahPages}</div>
+          <button onClick={nextSurahPage} disabled={surahPage === totalSurahPages} className="px-5 py-2.5 rounded-full bg-white/[0.06] border border-white/10 text-white text-sm font-medium hover:bg-white/[0.10] disabled:opacity-30 disabled:cursor-not-allowed transition">التالي →</button>
+        </div>
       </div>
 
-      {/* Surah Modal */}
       {selectedSurahNumber && (
-        <SurahModal
-          surahNumber={selectedSurahNumber}
-          onClose={() => setSelectedSurahNumber(null)}
-        />
+        <SurahModal surahNumber={selectedSurahNumber} onClose={() => setSelectedSurahNumber(null)} />
       )}
-
-    
     </div>
   );
 }
