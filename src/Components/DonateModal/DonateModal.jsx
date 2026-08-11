@@ -1,30 +1,18 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { FaTimes, FaCopy, FaCheckCircle } from "react-icons/fa";
-import { MdPhone } from "react-icons/md";
-import { SiVodafone, SiGooglepay } from "react-icons/si";
-import { IoSparkles, IoHeartSharp } from "react-icons/io5";
-import { BsStarFill } from "react-icons/bs";
+import { HiX } from "react-icons/hi";
+import { FaHeart } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
 export default function DonateModal({ modalStatus, setModalStatus }) {
   const [copiedField, setCopiedField] = useState(null);
 
-  // 🔒 قفل الاسكرول اللي ورا المودال
   useEffect(() => {
-    if (modalStatus) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
+    document.body.style.overflow = modalStatus ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
   }, [modalStatus]);
 
-  // نسخ
   const copyToClipboard = (text, field) => {
     navigator.clipboard.writeText(text);
     setCopiedField(field);
@@ -33,46 +21,10 @@ export default function DonateModal({ modalStatus, setModalStatus }) {
 
   if (!modalStatus) return null;
 
-  const paymentMethods = [
-    {
-      id: "vodafone",
-      title: "Vodafone Cash",
-      icon: SiVodafone,
-      iconColor: "text-red-500",
-      gradientFrom: "from-red-500/20",
-      gradientTo: "to-red-600/10",
-      borderColor: "border-red-400/30",
-      glowColor: "shadow-red-500/20",
-      hoverGlow: "hover:shadow-red-400/40",
-      label: "رقم المحفظة",
-      value: "01080054892",
-    },
-    {
-      id: "instapay",
-      title: "InstaPay",
-      icon: SiGooglepay,
-      iconColor: "text-sky-400",
-      gradientFrom: "from-sky-500/20",
-      gradientTo: "to-sky-600/10",
-      borderColor: "border-sky-400/30",
-      glowColor: "shadow-sky-500/20",
-      hoverGlow: "hover:shadow-sky-400/40",
-      label: "اسم المستخدم",
-      value: "mkhier159@instapay",
-    },
-    {
-      id: "contact",
-      title: "للتواصل المباشر",
-      icon: MdPhone,
-      iconColor: "text-green-400",
-      gradientFrom: "from-green-500/20",
-      gradientTo: "to-green-600/10",
-      borderColor: "border-green-400/30",
-      glowColor: "shadow-green-500/20",
-      hoverGlow: "hover:shadow-green-400/40",
-      label: "واتساب أو اتصال",
-      value: "+201091320767",
-    },
+  const methods = [
+    { id: "vodafone", title: "Vodafone Cash", label: "رقم المحفظة", value: "01080054892", accent: "from-[#E30613]/20 to-[#A00A12]/10" },
+    { id: "instapay", title: "InstaPay", label: "اسم المستخدم", value: "mkhier159@instapay", accent: "from-[#0EA5E9]/20 to-[#0369A1]/10" },
+    { id: "contact", title: "تواصل مباشر", label: "واتساب / اتصال", value: "+201091320767", accent: "from-[#10B981]/20 to-[#065F46]/10" },
   ];
 
   return (
@@ -82,132 +34,70 @@ export default function DonateModal({ modalStatus, setModalStatus }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center px-4"
+          className="fixed inset-0 z-[9999] bg-[#040C12]/75 backdrop-blur-[12px] flex items-center justify-center p-4"
           onClick={() => setModalStatus(false)}
         >
           <motion.div
-            initial={{ scale: 0.8, opacity: 0, y: 50 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 50 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            initial={{ y: 20, opacity: 0, scale: 0.97 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: 12, opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="
-              relative
-              w-full max-w-5xl
-              max-h-[90vh] overflow-y-auto
-              overscroll-contain
-              scrollbar-thin scrollbar-thumb-yellow-400/40 scrollbar-track-transparent
-              bg-gradient-to-br from-indigo-950 via-purple-900 to-indigo-950
-              rounded-3xl
-              border-2 border-yellow-400/30
-              shadow-2xl shadow-purple-500/50
-              p-6 sm:p-8 md:p-12
-            "
+            className="relative w-full max-w-[880px] max-h-[90vh] overflow-auto rounded-[28px] border border-white/10 bg-[#0A1720]/90 backdrop-blur-2xl shadow-[0_20px_64px_rgba(0,0,0,0.5)]"
           >
-            {/* نجوم خلفية */}
-            <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
-              {[...Array(15)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute"
-                  animate={{
-                    opacity: [0.2, 0.5, 0.2],
-                    scale: [1, 1.2, 1],
-                  }}
-                  transition={{
-                    duration: 3 + Math.random() * 2,
-                    repeat: Infinity,
-                  }}
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                  }}
-                >
-                  <BsStarFill
-                    className="text-yellow-300"
-                    size={8 + Math.random() * 12}
-                  />
-                </motion.div>
-              ))}
-            </div>
+            <div className="absolute inset-0 rounded-[28px] bg-gradient-to-br from-white/[0.06] via-transparent to-transparent pointer-events-none" />
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#E8C46A]/25 to-transparent" />
 
-            {/* زر الإغلاق */}
             <button
               onClick={() => setModalStatus(false)}
-              className="absolute top-4 right-4 z-10 w-11 h-11 flex items-center justify-center
-              bg-red-500/20 border border-red-400/30 rounded-full text-red-300 hover:text-red-200"
+              className="absolute left-4 top-4 w-8 h-8 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/[0.10] transition"
             >
-              <FaTimes />
+              <HiX />
             </button>
 
-            {/* الهيدر */}
-            <div className="text-center mb-10">
-              <div className="flex justify-center mb-6">
-                <div className="bg-yellow-400 p-5 rounded-full shadow-2xl shadow-yellow-500/50">
-                  <IoHeartSharp className="text-5xl text-purple-900" />
+            <div className="relative p-6 sm:p-8">
+              <div className="text-center max-w-[560px] mx-auto">
+                <div className="mx-auto w-12 h-12 rounded-2xl bg-[#E8C46A] flex items-center justify-center text-[#07161E] shadow-[0_8px_20px_rgba(232,196,106,0.3)]">
+                  <FaHeart />
                 </div>
+                <h2 className="mt-4 text-[24px] md:text-[26px] font-bold text-white">صدقة جارية</h2>
+                <p className="mt-2 text-[13.5px] leading-6 text-white/60">
+                  تبرعك يصل أجره بإذن الله — صدقة جارية بنية الرحمة والمغفرة. اختر الوسيلة الأنسب لك.
+                </p>
               </div>
 
-              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-yellow-200 to-yellow-400 bg-clip-text text-transparent">
-                صدقة جارية
-              </h2>
-
-              <p className="text-purple-200 mt-4 max-w-2xl mx-auto">
-                تبرعك يصل أجره بإذن الله، وهو صدقة جارية بنية الرحمة والمغفرة
-              </p>
-            </div>
-
-            {/* طرق الدفع */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-              {paymentMethods.map((method) => (
-                <div
-                  key={method.id}
-                  className={`bg-gradient-to-br ${method.gradientFrom} ${method.gradientTo}
-                  border-2 ${method.borderColor} rounded-2xl p-6 text-center shadow-xl`}
-                >
-                  <method.icon
-                    className={`${method.iconColor} text-6xl mx-auto mb-4`}
-                  />
-
-                  <h3 className="text-yellow-300 font-bold text-xl mb-2">
-                    {method.title}
-                  </h3>
-
-                  <p className="text-purple-200 text-sm mb-2">
-                    {method.label}
-                  </p>
-
-                  <div className="bg-indigo-950/50 border border-yellow-400/20 rounded-xl p-3 mb-3">
-                    <p className="text-white font-semibold" dir="ltr">
-                      {method.value}
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={() =>
-                      copyToClipboard(method.value, method.id)
-                    }
-                    className={`w-full py-3 rounded-xl font-bold transition
-                      ${
-                        copiedField === method.id
-                          ? "bg-green-500 text-white"
-                          : "bg-yellow-400 text-purple-900 hover:bg-yellow-300"
-                      }`}
+              <div className="grid md:grid-cols-3 gap-4 mt-8">
+                {methods.map((m) => (
+                  <div
+                    key={m.id}
+                    className={`relative overflow-hidden rounded-2xl border border-white/[0.07] bg-gradient-to-br ${m.accent} backdrop-blur-md p-5 text-center`}
                   >
-                    {copiedField === method.id ? "تم النسخ ✓" : "نسخ"}
-                  </button>
-                </div>
-              ))}
-            </div>
+                    <div className="absolute inset-0 bg-white/[0.03]" />
+                    <div className="relative">
+                      <div className="text-sm font-bold text-white">{m.title}</div>
+                      <div className="text-xs text-white/50 mt-1">{m.label}</div>
+                      <div className="mt-3 rounded-xl bg-[#07161E]/70 border border-white/10 px-3 py-3">
+                        <p className="text-sm font-bold tracking-wide text-[#FDEEB1]" dir="ltr">{m.value}</p>
+                      </div>
+                      <button
+                        onClick={() => copyToClipboard(m.value, m.id)}
+                        className={`mt-3 w-full py-2.5 rounded-full text-sm font-bold transition border ${
+                          copiedField === m.id
+                            ? "bg-[#10B981] text-white border-[#10B981]"
+                            : "bg-[#E8C46A] text-[#07161E] border-[#E8C46A] hover:bg-[#F0D27A]"
+                        }`}
+                      >
+                        {copiedField === m.id ? "تم النسخ ✓" : "نسخ"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-            {/* دعاء */}
-            <div className="text-center">
-              <p className="text-purple-200">
-                🤲 اللهم تقبل منا ومنكم، واجعل هذا العمل خالصًا لوجهك الكريم
-              </p>
-              <p className="text-yellow-300 font-semibold mt-3">
-                بارك الله فيكم وجزاكم الله خيراً
-              </p>
+              <div className="mt-6 rounded-2xl bg-white/[0.03] border border-white/[0.06] p-4 text-center">
+                <p className="text-sm text-white/70">🤲 اللهم تقبل منا ومنكم واجعله خالصًا لوجهك الكريم</p>
+                <p className="text-xs text-[#E8C46A] mt-1 font-medium">بارك الله فيكم وجزاكم خيرًا</p>
+              </div>
             </div>
           </motion.div>
         </motion.div>

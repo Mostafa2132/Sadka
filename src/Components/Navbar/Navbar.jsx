@@ -2,9 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
-import { FaMosque } from "react-icons/fa";
-import { FaMoon, FaStar } from "react-icons/fa";
-import { BsStarFill } from "react-icons/bs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Du3aMarque from "../Du3aMarque/Du3aMarque";
@@ -16,139 +13,140 @@ export default function Navbar() {
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const navLinks = [
     { name: "الرئيسية", href: "/" },
     { name: "مواقيت الصلاة", href: "/prayer-times" },
     { name: "الأدعية", href: "/duas" },
-    { name: "القرآن الكريم", href: "/quran" },
-    { name: "تواصل معنا", href: "/contact" },
+    { name: "القرآن", href: "/quran" },
+    { name: "تواصل", href: "/contact" },
   ];
 
   const pathname = usePathname();
+
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-gradient-to-r from-purple-900/95 via-indigo-900/95 to-purple-900/95 backdrop-blur-md shadow-lg shadow-purple-500/20"
-            : "bg-gradient-to-r from-purple-900/80 via-indigo-900/80 to-purple-900/80 backdrop-blur-sm"
-        }`}
-      >
-        {/* Decorative Stars */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <BsStarFill className="absolute top-2 left-10 text-yellow-300 text-xs animate-pulse" />
-          <BsStarFill className="absolute top-4 right-20 text-yellow-200 text-xs animate-pulse delay-100" />
-          <FaStar className="absolute bottom-2 left-1/4 text-yellow-300 text-xs animate-pulse delay-200" />
-          <FaStar className="absolute top-3 right-1/3 text-yellow-200 text-xs animate-pulse delay-300" />
-        </div>
+      <header className="fixed top-0 inset-x-0 z-50">
         <Du3aMarque />
-
-        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo Section */}
-            <div className="flex items-center space-x-3 space-x-reverse group cursor-pointer">
-              <div className="relative">
-                <FaMosque className="text-yellow-300 text-4xl group-hover:text-yellow-200 transition-colors duration-300" />
-                <FaMoon className="absolute -top-1 -right-1 text-yellow-400 text-sm animate-pulse" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-white text-2xl font-bold bg-gradient-to-r from-yellow-200 to-yellow-400 bg-clip-text text-transparent">
-                  رمضان كريم
-                </span>
-                <span className="text-yellow-200 text-xs">١٤٤٦ هـ</span>
-              </div>
-            </div>
-
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-1 space-x-reverse">
-              {navLinks.map((link, index) => (
-                <Link
-                  key={index}
-                  href={link.href}
-                  className={`relative px-4 py-2 text-white font-medium text-sm hover:text-yellow-300 transition-all duration-300 group ${
-                    pathname === link.href
-                      ? "text-yellow-300 bg-white/10 rounded-lg before:content-[''] before:absolute before:bottom-0 before:left-1/2 before:-translate-x-1/2 before:w-3/4 before:h-0.5 before:bg-yellow-400"
-                      : ""
-                  }`}
-                >
-                  <span className="relative z-10">{link.name}</span>
-                  <span className="absolute inset-0 bg-white/10 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 ease-out" />
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-yellow-300 to-yellow-500 group-hover:w-full transition-all duration-300" />
-                </Link>
-              ))}
-            </div>
-
-            {/* CTA Button - Desktop */}
-            <div className="hidden md:flex items-center space-x-3 space-x-reverse">
-              <button
-                onClick={() => setIsDonateModalOpen(!isDonateModalOpen)}
-                className="relative px-6 py-2.5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-purple-900 font-bold rounded-full hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 shadow-lg shadow-yellow-500/50 hover:shadow-yellow-400/60 hover:scale-105 overflow-hidden group"
-              >
-                <span className="relative z-10 flex items-center space-x-2 space-x-reverse">
-                  <span>تبرع الآن</span>
-                </span>
-                <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-              </button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors duration-300"
-            >
-              {isOpen ? (
-                <HiX className="h-7 w-7" />
-              ) : (
-                <HiMenu className="h-7 w-7" />
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        <nav
+          className={`transition-all duration-500 border-b ${
+            scrolled
+              ? "bg-[#050F14]/80 backdrop-blur-2xl border-white/[0.07] shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+              : "bg-[#050F14]/60 backdrop-blur-xl border-white/[0.05]"
           }`}
         >
-          <div className="px-4 pt-2 pb-6 space-y-2 bg-gradient-to-b from-purple-900/95 to-indigo-900/95 backdrop-blur-md border-t border-white/10">
-            {navLinks.map((link, index) => (
-              <Link
-                key={index}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className={`block ${
-                  pathname === link.href
-                    ? "text-yellow-300 bg-white/10 rounded-lg before:content-[''] before:absolute before:bottom-0 before:left-1/2 before:-translate-x-1/2 before:w-3/4 before:h-0.5 before:bg-yellow-400"
-                    : ""
-                } px-4 py-3 text-white font-medium rounded-lg hover:bg-white/10 hover:text-yellow-300 transition-all duration-300 text-right`}
-              >
-                {link.name}
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-[64px]">
+              {/* Logo - 2026 minimal */}
+              <Link href="/" className="flex items-center gap-3 group">
+                <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-[#1A2E2A] to-[#0F1E1A] border border-white/10 flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#E8C46A]/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="relative text-[16px] font-bold text-[#E8C46A] tracking-tight">ص</span>
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#10B981] border-2 border-[#0F1E1A]" />
+                </div>
+                <div className="flex flex-col leading-none">
+                  <span className="text-[15px] font-bold tracking-tight text-white group-hover:text-[#FDEEB1] transition-colors">
+                    صدقة جارية
+                  </span>
+                  <span className="text-[11px] font-medium tracking-[0.14em] text-white/45 uppercase">
+                    Sadka 2026
+                  </span>
+                </div>
               </Link>
-            ))}
-            <button onClick={() => setIsDonateModalOpen(!isDonateModalOpen)} className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-purple-900 font-bold rounded-full hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 shadow-lg shadow-yellow-500/50 flex items-center justify-center space-x-2 space-x-reverse">
-              <span>تبرع الآن</span>
-            </button>
+
+              {/* Desktop nav – pill */}
+              <div className="hidden lg:flex items-center">
+                <div className="flex items-center gap-1 p-1 rounded-full bg-white/[0.04] border border-white/[0.06] backdrop-blur-md">
+                  {navLinks.map((link) => {
+                    const active = pathname === link.href;
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={`relative px-4 py-[7px] rounded-full text-[13.5px] font-medium transition-all duration-300 ${
+                          active
+                            ? "bg-white text-[#07161E] shadow-sm"
+                            : "text-white/70 hover:text-white hover:bg-white/[0.06]"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="hidden lg:flex items-center gap-3">
+                <span className="hidden xl:inline-flex items-center gap-2 text-xs text-white/50 mr-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse-soft" />
+                  مباشر
+                </span>
+                <button
+                  onClick={() => setIsDonateModalOpen(true)}
+                  className="inline-flex items-center justify-center px-5 py-[9px] rounded-full bg-[#E8C46A] text-[#0A1A18] text-[13.5px] font-bold hover:bg-[#F0D27A] transition-all shadow-[0_4px_18px_rgba(232,196,106,0.3)] hover:shadow-[0_6px_24px_rgba(232,196,106,0.4)] hover:-translate-y-px active:translate-y-0"
+                >
+                  تبرع الآن
+                </button>
+              </div>
+
+              {/* Mobile toggle */}
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label="Menu"
+                className="lg:hidden w-9 h-9 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-white hover:bg-white/[0.10] transition"
+              >
+                {isOpen ? <HiX className="w-5 h-5" /> : <HiMenu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Bottom Decorative Border */}
-        <div className="h-1 bg-gradient-to-r from-transparent via-yellow-400 to-transparent opacity-50"></div>
-      </nav>
+          {/* Mobile drawer */}
+          <div
+            className={`lg:hidden overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] border-t border-white/[0.06] bg-[#070F17]/95 backdrop-blur-2xl ${
+              isOpen ? "max-h-[380px] opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="px-4 py-5 space-y-1">
+              {navLinks.map((link) => {
+                const active = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center justify-between px-4 py-3 rounded-xl text-[14px] font-medium transition ${
+                      active
+                        ? "bg-white text-[#07161E]"
+                        : "text-white/80 bg-white/[0.04] hover:bg-white/[0.08] hover:text-white"
+                    }`}
+                  >
+                    <span>{link.name}</span>
+                    {active && <span className="w-1.5 h-1.5 rounded-full bg-[#07161E]" />}
+                  </Link>
+                );
+              })}
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  setIsDonateModalOpen(true);
+                }}
+                className="w-full mt-3 py-3 rounded-xl bg-[#E8C46A] text-[#07161E] font-bold text-[14px] hover:bg-[#F0D27A] transition flex items-center justify-center gap-2"
+              >
+                <span>تبرع الآن</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#07161E]/60" />
+              </button>
+            </div>
+          </div>
+        </nav>
+      </header>
 
-      {/* Donate Modal */}
       {isDonateModalOpen && (
-        <DonateModal
-          modalStatus={isDonateModalOpen}
-          setModalStatus={setIsDonateModalOpen}
-        />
+        <DonateModal modalStatus={isDonateModalOpen} setModalStatus={setIsDonateModalOpen} />
       )}
     </>
   );

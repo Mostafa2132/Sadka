@@ -2,245 +2,88 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaTimes } from "react-icons/fa";
-import { IoSparkles } from "react-icons/io5";
-import { BsStarFill } from "react-icons/bs";
+import { HiX } from "react-icons/hi";
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
 
 export default function SurahModal({ surahNumber, onClose }) {
   const [surahData, setSurahData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [ayahPage, setAyahPage] = useState(1);
-  
   const ayahsPerPage = 6;
 
-  // جلب بيانات السورة
   useEffect(() => {
     const fetchSurah = async () => {
       setLoading(true);
       try {
-        const res = await fetch(
-          `https://api.alquran.cloud/v1/surah/${surahNumber}/ar.alafasy`
-        );
+        const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/ar.alafasy`);
         const data = await res.json();
         setSurahData(data.data);
-      } catch (err) {
-        console.error('Error fetching surah:', err);
-      } finally {
-        setLoading(false);
-      }
+      } catch (err) { console.error(err); }
+      finally { setLoading(false); }
     };
-
-    if (surahNumber) {
-      fetchSurah();
-      setAyahPage(1); // إعادة تعيين الصفحة عند فتح سورة جديدة
-    }
+    if (surahNumber) { fetchSurah(); setAyahPage(1); }
   }, [surahNumber]);
 
-  // حساب الآيات للصفحة الحالية
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
   const indexOfLastAyah = ayahPage * ayahsPerPage;
   const indexOfFirstAyah = indexOfLastAyah - ayahsPerPage;
   const currentAyahs = surahData?.ayahs.slice(indexOfFirstAyah, indexOfLastAyah);
   const totalAyahPages = surahData ? Math.ceil(surahData.ayahs.length / ayahsPerPage) : 0;
-
   const nextAyahPage = () => setAyahPage((prev) => Math.min(prev + 1, totalAyahPages));
   const prevAyahPage = () => setAyahPage((prev) => Math.max(prev - 1, 1));
 
   return (
     <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onClose}
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex justify-center items-center px-4 py-8 overflow-y-auto"
-      >
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="fixed inset-0 bg-[#040C12]/75 backdrop-blur-[12px] z-[9999] flex justify-center items-start p-4 overflow-y-auto">
         <motion.div
-          initial={{ scale: 0.8, opacity: 0, y: 50 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.8, opacity: 0, y: 50 }}
-          transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          initial={{ y: 20, opacity: 0, scale: 0.97 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
+          exit={{ y: 12, opacity: 0, scale: 0.97 }}
+          transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
           onClick={(e) => e.stopPropagation()}
-          className="
-            relative
-            bg-gradient-to-br from-indigo-950/95 via-purple-900/95 to-indigo-950/95
-            backdrop-blur-xl
-            rounded-3xl
-            border-2 border-yellow-400/40
-            shadow-2xl shadow-purple-500/50
-            p-6 md:p-10
-            w-full max-w-7xl
-            my-8
-          "
+          className="relative w-full max-w-[1120px] my-6 rounded-[28px] border border-white/10 bg-[#0A1720]/90 backdrop-blur-2xl shadow-[0_20px_64px_rgba(0,0,0,0.5)] overflow-hidden"
         >
-          {/* Corner Sparkles */}
-          <IoSparkles className="absolute -top-3 -right-3 text-yellow-300 text-3xl animate-pulse z-10" />
-          <IoSparkles className="absolute -top-3 -left-3 text-yellow-400 text-3xl animate-pulse delay-150 z-10" />
-          <IoSparkles className="absolute -bottom-3 -right-3 text-yellow-400 text-3xl animate-pulse delay-300 z-10" />
-          <IoSparkles className="absolute -bottom-3 -left-3 text-yellow-300 text-3xl animate-pulse delay-450 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.06] via-transparent to-transparent pointer-events-none" />
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#E8C46A]/20 to-transparent" />
 
-          {/* Close Button */}
-          <motion.button
-            whileHover={{ scale: 1.1, rotate: 90 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={onClose}
-            className="
-              absolute top-4 right-4 z-20
-              w-10 h-10
-              flex items-center justify-center
-              bg-red-500/20
-              border-2 border-red-400/30
-              rounded-full
-              text-red-300
-              hover:text-red-200
-              hover:bg-red-500/30
-              text-2xl
-              transition-all
-              shadow-lg
-            "
-          >
-            <FaTimes />
-          </motion.button>
+          <button onClick={onClose} className="absolute left-4 top-4 z-20 w-8 h-8 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/[0.10] transition">
+            <HiX />
+          </button>
 
-          {/* Loading State */}
           {loading ? (
-            <div className="text-center py-20">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-                className="w-20 h-20 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-4"
-              />
-              <p className="text-purple-200 text-lg">جاري تحميل الآيات...</p>
+            <div className="text-center py-20 px-6">
+              <div className="w-10 h-10 rounded-full border-2 border-white/15 border-t-[#E8C46A] animate-spin mx-auto" />
+              <p className="text-white/50 text-sm mt-4">جاري تحميل الآيات...</p>
             </div>
           ) : surahData ? (
-            <>
-              {/* Header */}
-              <div className="text-center mb-8">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
-                  <BsStarFill className="text-yellow-300 text-lg" />
-                  <div className="h-px flex-1 bg-gradient-to-l from-transparent via-yellow-400 to-transparent" />
-                </div>
-
-                <h2 className="text-3xl md:text-4xl font-bold mb-2">
-                  <span className="bg-gradient-to-r from-yellow-200 via-yellow-300 to-yellow-400 bg-clip-text text-transparent">
-                    {surahData.name}
-                  </span>
-                </h2>
-
-                <p className="text-yellow-300 text-lg mb-2">
-                  {surahData.englishName}
-                </p>
-
-                <div className="flex flex-wrap items-center justify-center gap-4 text-purple-200 text-sm">
-                  <span className="px-4 py-2 bg-yellow-400/10 border border-yellow-400/30 rounded-full">
-                    {surahData.ayahs.length} آية
-                  </span>
-                  <span className="px-4 py-2 bg-yellow-400/10 border border-yellow-400/30 rounded-full">
-                    {surahData.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}
-                  </span>
-                  <span className="px-4 py-2 bg-yellow-400/10 border border-yellow-400/30 rounded-full">
-                    سورة رقم {surahData.number}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-center gap-3 mt-4">
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
-                  <BsStarFill className="text-yellow-300 text-lg" />
-                  <div className="h-px flex-1 bg-gradient-to-l from-transparent via-yellow-400 to-transparent" />
-                </div>
+            <div className="relative p-6 md:p-8">
+              <div className="text-center">
+                <span className="inline-flex px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-xs text-white/60">سورة رقم {surahData.number}</span>
+                <h2 className="mt-3 text-[26px] md:text-[32px] font-bold text-white">{surahData.name}</h2>
+                <p className="text-[#E8C46A] text-sm">{surahData.englishName} • {surahData.revelationType === 'Meccan' ? 'مكية' : 'مدنية'} • {surahData.ayahs.length} آية</p>
               </div>
 
-              {/* Ayahs Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 max-h-[60vh] overflow-y-auto px-2">
-                {currentAyahs?.map((ayah, index) => (
-                  <motion.div
-                    key={ayah.number}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <AudioPlayer 
-                      src={ayah.audio} 
-                      title={ayah.text}
-                      ayahNumber={ayah.numberInSurah}
-                    />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 max-h-[58vh] overflow-y-auto pr-1">
+                {currentAyahs?.map((ayah, idx) => (
+                  <motion.div key={ayah.number} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.04 }}>
+                    <AudioPlayer src={ayah.audio} title={`${ayah.text} — آية ${ayah.numberInSurah}`} />
                   </motion.div>
                 ))}
               </div>
 
-              {/* Pagination */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8"
-              >
-                <button
-                  onClick={prevAyahPage}
-                  disabled={ayahPage === 1}
-                  className="
-                    px-6 py-3
-                    bg-gradient-to-r from-purple-800/60 to-indigo-900/60
-                    backdrop-blur-sm
-                    border-2 border-yellow-400/30
-                    rounded-xl
-                    text-yellow-300
-                    font-semibold
-                    hover:border-yellow-400/60
-                    hover:shadow-lg hover:shadow-yellow-400/20
-                    transition-all
-                    disabled:opacity-30
-                    disabled:cursor-not-allowed
-                  "
-                >
-                  ← الآيات السابقة
-                </button>
-
-                <div className="px-6 py-3 bg-yellow-400/10 border border-yellow-400/30 rounded-xl">
-                  <span className="text-purple-200">
-                    صفحة <span className="text-yellow-300 font-bold">{ayahPage}</span> من <span className="text-yellow-300 font-bold">{totalAyahPages}</span>
-                  </span>
-                </div>
-
-                <button
-                  onClick={nextAyahPage}
-                  disabled={ayahPage === totalAyahPages}
-                  className="
-                    px-6 py-3
-                    bg-gradient-to-r from-purple-800/60 to-indigo-900/60
-                    backdrop-blur-sm
-                    border-2 border-yellow-400/30
-                    rounded-xl
-                    text-yellow-300
-                    font-semibold
-                    hover:border-yellow-400/60
-                    hover:shadow-lg hover:shadow-yellow-400/20
-                    transition-all
-                    disabled:opacity-30
-                    disabled:cursor-not-allowed
-                  "
-                >
-                  الآيات التالية →
-                </button>
-              </motion.div>
-
-              {/* Bottom Note */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.7 }}
-                className="text-center mt-8"
-              >
-                <p className="text-purple-300 text-sm">
-                  🎙️ بصوت الشيخ مشاري العفاسي
-                </p>
-              </motion.div>
-            </>
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-red-400 text-xl">حدث خطأ في تحميل السورة</p>
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-3 mt-6">
+                <button onClick={prevAyahPage} disabled={ayahPage === 1} className="px-5 py-2.5 rounded-full bg-white/[0.06] border border-white/10 text-white text-sm hover:bg-white/[0.10] disabled:opacity-30 transition">← السابقة</button>
+                <div className="px-4 py-2 rounded-full bg-[#E8C46A]/10 border border-[#E8C46A]/15 text-sm text-white/70">صفحة <span className="text-[#FDEEB1] font-bold">{ayahPage}</span> من {totalAyahPages}</div>
+                <button onClick={nextAyahPage} disabled={ayahPage === totalAyahPages} className="px-5 py-2.5 rounded-full bg-white/[0.06] border border-white/10 text-white text-sm hover:bg-white/[0.10] disabled:opacity-30 transition">التالية →</button>
+              </div>
+              <p className="text-center text-xs text-white/30 mt-4">🎙️ بصوت الشيخ مشاري العفاسي</p>
             </div>
+          ) : (
+            <div className="text-center py-20"><p className="text-red-300">حدث خطأ في تحميل السورة</p></div>
           )}
         </motion.div>
       </motion.div>
